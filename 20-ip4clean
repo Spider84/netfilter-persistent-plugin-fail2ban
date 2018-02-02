@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Copyright (C) 2018, Alexey Belyaev <spider@spider.vc>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+
+set -e
+
+rc=0
+
+save_rules()
+{
+	#save IPv4 rules
+	if [ -f /etc/iptables/rules.v4 ]; then
+		rules=`cat /etc/iptables/rules.v4`
+		echo "$rules" | grep -v "f2b-" | grep -v "MINIUPNPD" > /etc/iptables/rules.v4
+	fi
+}
+
+case "$1" in
+start|restart|reload|force-reload)
+	;;
+save)
+	save_rules
+	;;
+stop)
+	;;
+flush)
+	;;
+*)
+    echo "Usage: $0 {start|restart|reload|force-reload|save|flush}" >&2
+    exit 1
+    ;;
+esac
+
+exit $rc
